@@ -1,0 +1,4 @@
+A corriger:
+-un utilisateur possède des Followers et Following non pas sous forme de profil observé comme proposé avant mais directement sous forme d'utilisateur 
+(limitation de la profondeur à 3 utilisateurs afin de ne pas entrer dans une boucle infini)
+-mauvaise compréhension de l'interface demandé, saisies de requêtes dans la base de données et non une "copie de twitter"
