@@ -285,7 +285,7 @@ public class Twitty {
                                  //ET PAS UN RETWEET
                                  String xpaRT = xpaTweet + "/div/div/article/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/a";
                                  if (driver.findElements(By.xpath(xpaRT)).isEmpty()) {
-                                     //enregistrement
+                                     /*enregistrement*/
                                      listeTweetDate.add(date);
 
                                      //incrementation et affichage de la date du tweet
@@ -300,14 +300,33 @@ public class Twitty {
                                      //affichage texte tweet
                                      //TODO problemes images, div en dessous
                                      String xpaDivTweet = xpaTweet + "/div/div/article/div/div/div/div[2]/div[2]/div[2]/div[1]/div";
-                                     List<WebElement> childDivTweet = driver.findElement(By.xpath(xpaDivTweet)).findElements(By.xpath("*"));
-                                     String contenuTweet = "";
-                                     for (WebElement we : childDivTweet) {
-                                         contenuTweet += we.getText() + "" + newLine;
-                                         System.out.println(we.getText() + "" + newLine + "-----------------------------------------------------");
+                                     try {
+                                         List<WebElement> childDivTweet = driver.findElement(By.xpath(xpaDivTweet)).findElements(By.xpath("*"));
+                                         String contenuTweet = "";
+                                         for (WebElement we : childDivTweet) {
+                                             contenuTweet += we.getText() + "" + newLine;
+                                             System.out.println(we.getText() + "" + newLine + "-----------------------------------------------------");
+                                         }
+                                     }catch (Exception e) {
+                                         System.out.println("<--MEDIA-->");
+                                         System.out.println(newLine + "-----------------------------------------------------");
                                      }
 
 
+                                     //enregistrement nbLike & nbRT
+                                     String xpaNbLikeSpan=xpaTweet+"/div/div/article/div/div/div/div[2]/div[2]/div[2]/div[3]/div/div[3]/div/div/div[2]/span/span/span";
+                                     String xpaNbRTSpan=xpaTweet+"/div/div/article/div/div/div/div[2]/div[2]/div[2]/div[3]/div/div[2]/div/div/div[2]/span/span/span";
+                                     String nbLike="0";
+                                     String nbRT="0";
+                                     //si xpa vide=0, sinon voir le contenu
+                                     if(!driver.findElements(By.xpath(xpaNbLikeSpan)).isEmpty()){
+                                        nbLike=driver.findElement(By.xpath(xpaNbLikeSpan)).getText();
+                                     }
+                                     if(!driver.findElements(By.xpath(xpaNbRTSpan)).isEmpty()){
+                                         nbRT=driver.findElement(By.xpath(xpaNbRTSpan)).getText();
+                                     }
+                                     System.out.println("nbLike: "+nbLike);
+                                     System.out.println("nbRT: "+nbRT +newLine);
 
                                  }
                                  //hauteur totale + hauteur du tweet
