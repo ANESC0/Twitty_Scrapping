@@ -7,19 +7,21 @@ public class Profil {
     private String localisation;
     private String nbAbonnement;
     private String nbAbonnes;
+    private String dateNaiss;
     private String aRejoinTwitter;
 
 
 
     /* Constructeur */
 
-    public Profil(){
-        this.pseudo="";
-        this.description="";
-        this.localisation="";
-        this.nbAbonnement="";
-        this.nbAbonnes="";
-        this.aRejoinTwitter="";
+    public Profil() {
+        this.pseudo = "";
+        this.description = "";
+        this.localisation = "";
+        this.nbAbonnement = "";
+        this.nbAbonnes = "";
+        this.aRejoinTwitter = "";
+        this.dateNaiss = "";
 
     }
 
@@ -31,14 +33,14 @@ public class Profil {
      * @return correspond au a rejoin twitter final sans le texte devant au format MM/YYYY
      */
 
-    public String aRejoinTwitterConvert(String aRT){
-        String nbMois="";
+    public String aRejoinTwitterConvert(String aRT) {
+        String nbMois = "";
         String date1 = aRT;
-        int taille=date1.length();
-        String mois=date1.substring(21,taille-5);
-        String annee1=date1.substring(taille-4);
+        int taille = date1.length();
+        String mois = date1.substring(21, taille - 5);
+        String annee1 = date1.substring(taille - 4);
 
-        switch(mois){
+        switch (mois) {
             case "janvier":
                 nbMois = "01";
                 break;
@@ -67,25 +69,25 @@ public class Profil {
 
                 break;
             case "août":
-                nbMois ="08";
+                nbMois = "08";
 
                 break;
             case "septembre":
                 nbMois = "09";
                 break;
             case "octobre":
-                nbMois= "10";
+                nbMois = "10";
                 break;
             case "novembre":
-                nbMois="11";
+                nbMois = "11";
 
                 break;
             case "décembre":
-                nbMois="12";
+                nbMois = "12";
                 break;
 
         }
-        return (nbMois+"-"+annee1);
+        return (nbMois + "-" + annee1);
     }
 
     public String getPseudo() {
@@ -132,10 +134,18 @@ public class Profil {
         return aRejoinTwitter;
     }
 
+    public void setDateNaiss(String text) {
+        this.dateNaiss = text;
+    }
+
+    public String getDateNaiss() {
+        return this.dateNaiss;
+    }
+
+
     public void setaRejoinTwitter(String aRejoinTwitter) {
         this.aRejoinTwitter = aRejoinTwitter;
     }
-
 
 
     /**
@@ -144,50 +154,50 @@ public class Profil {
      * @param param la chaine de caractère à adapter
      * @return le nombre adapter de la chaine de caractère
      */
-    public int adaptationNbFollow(String param){
+    public int adaptationNbFollow(String param) {
 
-        int res=0;
+        int res = 0;
 
-        if(!isNumeric(param)){
-            int l1=0;
-            int l2=0;
-            String[] charVirgule = {"a","b"}; //tableau exemple supprimé si utilisé
+        if (!isNumeric(param)) {
+            int l1 = 0;
+            int l2 = 0;
+            String[] charVirgule = {"a", "b"}; //tableau exemple supprimé si utilisé
 
             boolean virgule = false;
 
-            String[] lastChar= param.split(" ");
-            if(lastChar[0].contains(",")){
+            String[] lastChar = param.split(" ");
+            if (lastChar[0].contains(",")) {
                 virgule = true;
                 charVirgule = lastChar[0].split(",");
                 l1 = charVirgule[0].length();
                 l2 = charVirgule[1].length();
 
             }
-            if(lastChar.length!=1){
+            if (lastChar.length != 1) {
 
-                switch (lastChar[1]){
+                switch (lastChar[1]) {
                     case "M":
-                        if(virgule){
+                        if (virgule) {
                             int p1 = Integer.parseInt(charVirgule[0]);
                             int p2 = Integer.parseInt(charVirgule[1]);
 
                             res = p1 * 1000000;
-                            res = res + (p2*100000);
-                        }else{
+                            res = res + (p2 * 100000);
+                        } else {
                             res = Integer.parseInt(lastChar[0]);
                             res = res * 1000000;
                         }
 
                         break;
                     case "k":
-                        if(virgule){
+                        if (virgule) {
                             int p1 = Integer.parseInt(charVirgule[0]);
                             int p2 = Integer.parseInt(charVirgule[1]);
 
                             res = p1 * 1000;
-                            res = res + (p2*100);
+                            res = res + (p2 * 100);
 
-                        }else{
+                        } else {
                             res = Integer.parseInt(lastChar[0]);
                             res = res * 1000;
                         }
@@ -198,10 +208,10 @@ public class Profil {
                         break;
                 }
 
-            }else {
+            } else {
                 res = Integer.parseInt(lastChar[0]);
             }
-        }else {
+        } else {
             String replaced = param.replaceAll(" ", "");
             res = Integer.parseInt(replaced);
         }
@@ -212,4 +222,5 @@ public class Profil {
     public static boolean isNumeric(String str) {
         return str.matches("[0-9 ]+[\\\\.]?[0-9 ]*");  //match un nombre sans espace avant et après
     }
+
 }

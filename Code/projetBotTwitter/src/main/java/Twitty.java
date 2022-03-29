@@ -18,11 +18,13 @@ public class Twitty {
     private boolean desc=true;
     private boolean local=true;
     private boolean lien=true;
+    private boolean dtNaiss=true;
     private WebElement pseudo=null;
     private WebElement description=null;
     private WebElement localisation=null;
     private WebElement nbAbonnement=null;
     private WebElement nbAbonnes=null;
+    private WebElement dateNaiss;
     private WebElement aRejoinTwitter=null;
     private WebDriver driver;
 
@@ -37,6 +39,8 @@ public class Twitty {
 
     }
 
+
+    /* Methodes */
     //public Twitty()
 
 
@@ -50,34 +54,11 @@ public class Twitty {
         options.addArguments("--window-size=1400,800");**/
         driver= new ChromeDriver(options);
 
-        /**
-        String email=Compte.EMAIL;
-        String mdp=Compte.MDP;
-        driver.get("https://twitter.com/i/flow/login");
-        driver.manage().timeouts().implicitlyWait(6, TimeUnit.SECONDS);
-
-        WebElement name=driver.findElement(By.xpath("//label/div/div[2]"));
-        new Actions(driver).moveToElement(name).click().perform();
-        new Actions(driver).sendKeys(email).perform();
-
-        WebElement co= driver.findElement(By.xpath("//div[6]/div/span/span"));
-        new Actions(driver).moveToElement(co).click().perform();
-
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
-        WebElement weMdp=driver.findElement(By.xpath("//div[3]/div/label/div/div[2]/div/input"));
-        new Actions(driver).moveToElement(weMdp).click().perform();
-        new Actions(driver).sendKeys(mdp).perform();
-
-        WebElement connexion=driver.findElement(By.xpath("//div[2]/div/div/div/span/span"));
-        new Actions(driver).moveToElement(connexion).click().perform();
-
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-         */
 
 
         driver.get("https://www.twitter.com/"+user+"");
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
 
 
         try {
@@ -156,9 +137,37 @@ public class Twitty {
         // nbAbonnees
 
         try {
-            if ((desc == true) & (local == true)) {
+            if ((desc == true) && (local == true)) {
                 nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[5]/div[2]/a/span[1]/span"));
                 System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
+            }
+            if ((desc == false) && (local == true)) {
+                nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div[2]/a/span[1]/span"));
+                System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
+
+            }
+            if ((desc == false) && (local == false)) {
+                nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div[2]/a/span[1]/span"));
+                System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
+            }
+
+            if ((desc == true) & (local == false)) {
+                nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[5]/div[2]/a/span[1]/span"));
+                System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
+            }
+            pro.setNbAbonnes(nbAbonnes.getText());
+
+        } catch (Exception e) {
+            System.out.println("le nombre d'abonnés ne s'affiche pas");
+        }
+
+        // DateNaissance
+
+        try{
+
+            if ((desc == true) & (local == true)) {
+                dateNaiss = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[2]"));
+                System.out.println("date de naissance : " + dateNaiss.getText());
             }
             if ((desc == false) & (local == true)) {
                 nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div[2]/a/span[1]/span"));
@@ -174,35 +183,40 @@ public class Twitty {
                 nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[5]/div[2]/a/span[1]/span"));
                 System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
             }
-            pro.setNbAbonnes(nbAbonnes.getText());
+            pro.setDateNaiss(dateNaiss.getText());
 
-        } catch (Exception e) {
-            System.out.println("le nombre d'abonnés ne s'affiche pas");
+        } catch (Exception e){
+            System.out.println("le profil n'a pas mis sa date de naissance en public");
+            dtNaiss=false;
+
         }
-
 
         // a rejoin twitter
 
 
         try {
-            if (desc == true && local == true) {
-                aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div/span[2]/span"));
+            if (desc == true && local == true && dtNaiss==true) {
+                System.out.println("je passe ici 1");
+                aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[3]/span"));
                 System.out.println(aRejoinTwitter.getText());
-            } else {
-                if ((desc == false) && (local == false)) {
+            }
+            if ((desc == false) && (local == false)) {
+                    System.out.println("je passe ici 2");
                     aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/span/span"));
                     System.out.println(aRejoinTwitter.getText());
                 }
                 if ((desc == false) && (local == true)) {
+                    System.out.println("je passe ici 3");
                     aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/span[2]/span"));
                     System.out.println(aRejoinTwitter.getText());
 
                 }
                 if ((desc == true) && (local == false)) {
+                    System.out.println("je passe ici 4");
                     aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div/span/span"));
                     System.out.println(aRejoinTwitter.getText());
                 }
-            }
+
             pro.setaRejoinTwitter(aRejoinTwitter.getText());
 
         } catch (Exception e) {
@@ -241,7 +255,8 @@ public class Twitty {
 
         /**
          * Recuperation des tweets
-         */
+        */
+
          try {
              JavascriptExecutor js = (JavascriptExecutor) driver;
              long taillePage = (Long) js.executeScript("return document.body.scrollHeight");
@@ -365,12 +380,18 @@ public class Twitty {
          - tweets recuperes dans le bon ordre
          - (tweets manquants?)
          - probleme image sans texte
-
 */
+
          } catch (Exception e) {
 
          e.printStackTrace();
          }
+
+
+         }
+         
+         public void recupererFollower(){
+
 
 
          }
