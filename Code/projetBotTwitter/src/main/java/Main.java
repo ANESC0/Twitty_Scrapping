@@ -17,19 +17,7 @@ public class Main  {
 
     public static void main(String[] args) {
 
-        /**
-         * Pour faire fonctionner seleninum chez vous. Il vous faudra installer le chrome driver sur le site
-         *
-         * https://chromedriver.storage.googleapis.com/index.html?path=97.0.4692.71/
-         *
-         * Par la suite vous devais changer votre chemin d'acces en fonction de la ou sera votre chromedriver.exe
-         *
-         * Pour trouver le chemin d'acces shift+clic droit sur le chromeDriver et appuyer sur la touche copier en tant que chemin d'acces
-         *
-         * changer ensuite le chemin d'acces dans le setProperties. Une page chrome devrais se lancer
-         */
-
-         Twitty tw=new Twitty("rebeudeter");
+         Twitty tw=new Twitty("thomms52");
         tw.scrapping();
 
         //Main m = new Main();
