@@ -87,17 +87,13 @@ public class Twitty {
         try {
             if (desc == true) {
                 localisation = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div/span[1]/span/span"));
-                System.out.println("localisation : " + localisation.getText());
-                pro.setLocalisation(localisation.getText());
             }
             if (desc == false) {
 
                 localisation = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/span[1]/span/span"));
-                System.out.println("localisation : " + localisation.getText());
-                pro.setLocalisation(localisation.getText());
-
             }
-
+            System.out.println("localisation : " + localisation.getText());
+            pro.setLocalisation(localisation.getText());
 
         } catch (Exception e) {
             local = false;
@@ -109,23 +105,20 @@ public class Twitty {
         try {
             if ((desc == true) & (local == true)) {
                 nbAbonnement = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[5]/div[1]/a/span[1]/span"));
-                System.out.println("nombre d'abonnements : " + nbAbonnement.getText());
 
             }
             if ((desc == false) & (local == true)) {
                 nbAbonnement = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div[1]/a/span[1]/span"));
-                System.out.println("nombre d'abonnements : " + nbAbonnement.getText());
 
             }
             if ((desc == false) & (local == false)) {
                 nbAbonnement = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div[1]/a/span[1]/span"));
-                System.out.println("nombre d'abonnements : " + nbAbonnement.getText());
             }
 
             if ((desc == true) & (local == false)) {
                 nbAbonnement = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[5]/div[1]/a/span[1]/span"));
-                System.out.println("nombre d'abonnements : " + nbAbonnement.getText());
             }
+            System.out.println("nombre d'abonnements : " + nbAbonnement.getText());
             pro.setNbAbonnement(nbAbonnement.getText());
 
         } catch (Exception e) {
@@ -164,23 +157,27 @@ public class Twitty {
 
         try{
 
-            if ((desc == true) & (local == true)) {
+            if (desc == true & local == true) {
                 dateNaiss = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[2]"));
+
+            }
+            if (desc == false & local == true) {
+                dateNaiss = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[3]/div/span[2]"));
+
+            }
+            if (desc == false & local == false) {
+                dateNaiss = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[3]/div/span[1]"));
+            }
+
+            if (desc == true & local == false) {
+                dateNaiss = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[1]"));
+            }
+            if (dateNaiss.getText().substring(0,1).equals("N")){
                 System.out.println("date de naissance : " + dateNaiss.getText());
-            }
-            if ((desc == false) & (local == true)) {
-                nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div[2]/a/span[1]/span"));
-                System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
 
-            }
-            if ((desc == false) & (local == false)) {
-                nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div[2]/a/span[1]/span"));
-                System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
-            }
+            }else{
+                dtNaiss=false;
 
-            if ((desc == true) & (local == false)) {
-                nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[5]/div[2]/a/span[1]/span"));
-                System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
             }
             pro.setDateNaiss(dateNaiss.getText());
 
@@ -195,27 +192,33 @@ public class Twitty {
 
         try {
             if (desc == true && local == true && dtNaiss==true) {
-                System.out.println("je passe ici 1");
                 aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[3]/span"));
-                System.out.println(aRejoinTwitter.getText());
             }
-            if ((desc == false) && (local == false)) {
-                    System.out.println("je passe ici 2");
+            if (desc == false && local == true && dtNaiss==true) {
+                aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[3]/div/span[3]/span"));
+            }
+            if (desc == true && local == false && dtNaiss==true) {
+                aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[2]/span"));
+            }
+            if (desc == false && local == false && dtNaiss==true) {
+                aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[3]/div/span[2]/span"));
+            }
+
+
+            if (desc == false && local == false && dtNaiss==false) {
                     aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/span/span"));
-                    System.out.println(aRejoinTwitter.getText());
                 }
-                if ((desc == false) && (local == true)) {
-                    System.out.println("je passe ici 3");
+                if (desc == false && local == true && dtNaiss==false) {
                     aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/span[2]/span"));
-                    System.out.println(aRejoinTwitter.getText());
 
                 }
-                if ((desc == true) && (local == false)) {
-                    System.out.println("je passe ici 4");
+                if ((desc == true) && (local == false) && (dtNaiss==false)) {
                     aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div/span/span"));
-                    System.out.println(aRejoinTwitter.getText());
                 }
-
+            if ((desc == true) && (local == true) && (dtNaiss==false)) {
+                aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[2]/span"));
+            }
+            System.out.println(aRejoinTwitter.getText());
             pro.setaRejoinTwitter(aRejoinTwitter.getText());
 
         } catch (Exception e) {
@@ -254,7 +257,7 @@ public class Twitty {
 
         /**
          * Recuperation des tweets
-        */
+
 
          try {
              JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -298,7 +301,7 @@ public class Twitty {
                                      //ET PAS UN RETWEET
                                      String xpaRT = xpaTweet + "/div/div/article/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/a";
                                      if (driver.findElements(By.xpath(xpaRT)).isEmpty()) {
-                                         /*enregistrement*/
+                                         /*enregistrement
                                          listeTweetDate.add(date);
 
                                          //incrementation et affichage de la date du tweet
@@ -390,7 +393,7 @@ public class Twitty {
          - tweets recuperes dans le bon ordre
          - (tweets manquants?)
          - probleme image sans texte
-*/
+
 
          } catch(NoSuchWindowException e){
              System.out.println("Arret du programme. (fenetre fermee)");
@@ -401,7 +404,7 @@ public class Twitty {
             e.printStackTrace();
          }
 
-
+*/
          }
 
          public int numbersToInt(String number){
