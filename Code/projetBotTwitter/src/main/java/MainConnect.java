@@ -1,10 +1,15 @@
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Instant;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -96,7 +101,13 @@ try {
 
         WebElement recherche = driver.findElement(By.xpath("//div[2]/div/input"));
         new Actions(driver).moveToElement(recherche).click().perform();
-        new Actions(driver).sendKeys(user).perform();
+        new Actions(driver).sendKeys("@"+user).perform();
+        recherche.sendKeys(Keys.ENTER);
+        /**ons actionProvider = new Actions(driver);
+        Action keydown = actionProvider.keyDown(Keys.ENTER).sendKeys("a").build();
+        keydown.perform();*/
+        //WebElement textbox = driver.findElement(By.xpath("//div[2]/div/input"));
+        //new Actions(driver).moveToElement(textbox).click().perform();
 
        // WebDriverWait(driver, Duration.ofSeconds(10))
                // .until(ExpectedConditions.elementToBeClickable(By.xpath("//a/h3")));
@@ -105,17 +116,15 @@ try {
             //
         //   .until(driver -> driver.findElement(By.name("q")));
 
-
+// clique dans la categorie personnes de recherche
         driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
-
-        WebElement recherche1 = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[1]/div[1]/div/div/div/div/div[1]/div[2]/div/div/div/form/div[2]/div/div[3]/div/div/div/div[2]/div[1]"));
+        WebElement recherche1 = driver.findElement(By.xpath("//a[contains(.,'Personnes')]"));
         new Actions(driver).moveToElement(recherche1).click().perform();
-
-
+        //a/div/div[2]/div/img
         //div[2]/a/div/div/img
         //driver.navigate().to("https://twitter.com/home/"+user);
-
-
+        WebElement recherche2= driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/section/div/div/div[1]/div/div/div/div[2]/div[1]/div[1]/div/div[1]/a/div/div[1]/span/spang"));
+        new Actions(driver).moveToElement(recherche1).click().perform();
     }
 }
 

@@ -17,7 +17,11 @@ public class Main  {
 
     public static void main(String[] args) {
 
-         Twitty tw=new Twitty("rebeudeter");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("saisissez un utilisateur");
+        String user= sc.nextLine();
+
+         Twitty tw=new Twitty(user);
         tw.scrapping();
 
         //Main m = new Main();
