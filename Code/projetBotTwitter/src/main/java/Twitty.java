@@ -1,12 +1,10 @@
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.interactions.Actions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class Twitty {
 
@@ -45,7 +43,7 @@ public class Twitty {
 
     public ChromeDriver connexionTwitter(String user) throws InterruptedException {
 
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "Code/projetBotTwitter/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
 
     /*
@@ -108,14 +106,10 @@ public class Twitty {
                 WebElement weVerif3 = driver.findElement(By.xpath("//div[3]/div/label/div/div[2]/div/input"));
                 new Actions(driver).moveToElement(weVerif3).click().perform();
                 new Actions(driver).sendKeys(mdp).perform();
-
-
-                //confirme la connexion
+                Thread.sleep(100);
+                weVerif3.sendKeys(Keys.ENTER);
 
                 Thread.sleep(1000);
-                WebElement weVerif4 = driver.findElement(By.xpath("//div[2]/div/div/div/span/span"));
-                new Actions(driver).moveToElement(weVerif4).click().perform();
-
 
                 //driver.navigate().to("https://twitter.com/"+user);
             } catch(Exception ex){
@@ -130,6 +124,7 @@ public class Twitty {
                 WebElement recherche = driver.findElement(By.xpath("//div[2]/div/input"));
                 new Actions(driver).moveToElement(recherche).click().perform();
                 new Actions(driver).sendKeys("@" + user).perform();
+                Thread.sleep(400);
                 recherche.sendKeys(Keys.ENTER);
                 trouve=true;
             }catch (NoSuchElementException e){
@@ -529,11 +524,52 @@ public class Twitty {
 */
          }
 
-    public void scrappFollower(WebDriver web) {
+    public void scrappFollower(WebDriver web) throws InterruptedException {
 
+        //click sur abonnees
         WebElement weabo = web.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[5]/div[2]/a"));
         new Actions(web).moveToElement(weabo).click().perform();
 
+        Thread.sleep(1500);
+
+        //recup divs des abonnees
+        String xpaDivAbonnees="//*[@id=\"react-root\"]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div";
+        List<WebElement> divsAbonnees=web.findElement(By.xpath(xpaDivAbonnees)).findElements(By.xpath("*"));
+        for (WebElement e:divsAbonnees) {
+            System.out.println(e);
+            //verif dernier div vide present
+            if(!e.findElements(By.xpath("./div/div/div")).isEmpty()){
+                new Actions(web).moveToElement(e, 50, 1).click().build().perform();
+                int attempts=0;
+                while (attempts<5) {
+                    try {
+                        Thread.sleep(1000);
+                        if (!e.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div[2]/div/div/div/span")).getText().equalsIgnoreCase(this.user)) {
+                            String xpaNomUtilisateur = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div[1]/div/div/span[1]/span";
+                            WebElement weNomUtil = web.findElement(By.xpath(xpaNomUtilisateur));
+                            System.out.println(weNomUtil.getText());
+                        }
+                        web.navigate().back();
+                        break;
+                    }catch (StaleElementReferenceException ex){}
+                    attempts++;
+                }
+            }
+        }
+
+        /*for (int i=1;i<18;i++){
+            String xpaDivAbonnees="//*[@id=\"react-root\"]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div";
+            if(!web.findElements(By.xpath(xpaDivAbonnees)).isEmpty()) {
+                WebElement divAbonnee = web.findElement(By.xpath(xpaDivAbonnees));
+                System.out.println(divAbonnee);
+                new Actions(web).moveToElement(divAbonnee, 50, 1).click().build().perform();
+
+
+                web.navigate().back();
+            }
+        }*/
+
+        /*
         // xpath si le premier abonnee est lke compte sur lequel le bt s est connecte
 
         String xpathFstAD = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[1]/div/div/div/div[2]/div[1]/div/div/div[2]/div/a/div/div/span";
@@ -596,7 +632,7 @@ public class Twitty {
         for (int j = 0; j < tabFollower.length; i++) {
             System.out.println(tabFollower[j]);
         }
-
+*/
 
     }
         public int numbersToInt(String number){
