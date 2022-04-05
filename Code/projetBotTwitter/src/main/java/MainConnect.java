@@ -96,6 +96,7 @@ try {
             try {
                 WebElement recherche = driver.findElement(By.xpath("//div[2]/div/input"));
                 new Actions(driver).moveToElement(recherche).click().perform();
+                Thread.sleep(400);
                 new Actions(driver).sendKeys("@" + user).perform();
                 recherche.sendKeys(Keys.ENTER);
                 trouve=true;
@@ -131,7 +132,7 @@ try {
 
         try {
             WebElement searchUtil= driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/section/div/div/div[1]"));
-            new Actions(driver).moveToElement(searchUtil,10,3).click().build().perform();
+            new Actions(driver).moveToElement(searchUtil,60,1).click().build().perform();
         }catch (NoSuchElementException e){
             System.out.println("Recherche: Utilisateur non trouve");
         }
