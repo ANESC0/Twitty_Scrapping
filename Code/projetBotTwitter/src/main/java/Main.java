@@ -15,14 +15,18 @@ public class Main  {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+
+
 
         Scanner sc = new Scanner(System.in);
         System.out.println("saisissez un utilisateur");
         String user= sc.nextLine();
 
          Twitty tw=new Twitty(user);
-        tw.scrapping();
+        ChromeDriver ch= tw.connexionTwitter(user);
+        //tw.scrapping(user);
+        tw.scrappFollower(ch);
 
         //Main m = new Main();
 
