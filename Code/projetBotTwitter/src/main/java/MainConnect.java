@@ -1,23 +1,15 @@
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Instant;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 
 public class MainConnect {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         System.setProperty("webdriver.chrome.driver", "Code/projetBotTwitter/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         Scanner sc= new Scanner(System.in);
@@ -26,19 +18,19 @@ public class MainConnect {
     /*
     options.addArguments("--disable-gpu");
     options.addArguments("--headless");
-    options.addArguments("--window-size=1400,800");**/
+        options.addArguments("--window-size=1400,800");*/
         WebDriver driver = new ChromeDriver(options);
 
 
         String email = Compte.EMAIL;
         String mdp = Compte.MDP;
-        String nomUtil =Compte.nomUtil;
+        String nomUtil =Compte.NOM_UTILISATEUR;
 
         // page twitter de connection
 
 
         driver.get("https://twitter.com/i/flow/login");
-        driver.manage().timeouts().implicitlyWait(6, TimeUnit.SECONDS);
+        Thread.sleep(3000);
 
 try {
 
@@ -49,7 +41,7 @@ try {
     WebElement co = driver.findElement(By.xpath("//div[6]/div/span/span"));
     new Actions(driver).moveToElement(co).click().perform();
 
-    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+    Thread.sleep(3000);
 
     WebElement weMdp = driver.findElement(By.xpath("//div[3]/div/label/div/div[2]/div/input"));
     new Actions(driver).moveToElement(weMdp).click().perform();
@@ -74,10 +66,11 @@ try {
         //clique sur suivant
 
         //oriente le curseur sur le boutton confirmer
-
+        Thread.sleep(500);
         WebElement weVerif2 = driver.findElement(By.xpath("//div[2]/div[2]/div[2]/div/div/div/div"));
         new Actions(driver).moveToElement(weVerif2).click().perform();
 
+        Thread.sleep(500);
         // on oriente et on clique pour mettre le mot de passe
         WebElement weVerif3 = driver.findElement(By.xpath("//div[3]/div/label/div/div[2]/div/input"));
         new Actions(driver).moveToElement(weVerif3).click().perform();
@@ -85,7 +78,8 @@ try {
 
 
         //confirme la connexion
-        
+
+        Thread.sleep(1000);
         WebElement weVerif4 = driver.findElement(By.xpath("//div[2]/div/div/div/span/span"));
         new Actions(driver).moveToElement(weVerif4).click().perform();
 
@@ -97,12 +91,18 @@ try {
 
     }
 }
-
-
-        WebElement recherche = driver.findElement(By.xpath("//div[2]/div/input"));
-        new Actions(driver).moveToElement(recherche).click().perform();
-        new Actions(driver).sendKeys("@"+user).perform();
-        recherche.sendKeys(Keys.ENTER);
+        boolean trouve=false;
+        while(!trouve) {
+            try {
+                WebElement recherche = driver.findElement(By.xpath("//div[2]/div/input"));
+                new Actions(driver).moveToElement(recherche).click().perform();
+                new Actions(driver).sendKeys("@" + user).perform();
+                recherche.sendKeys(Keys.ENTER);
+                trouve=true;
+            }catch (NoSuchElementException e){
+                Thread.sleep(1000);
+            }
+        }
         /**ons actionProvider = new Actions(driver);
         Action keydown = actionProvider.keyDown(Keys.ENTER).sendKeys("a").build();
         keydown.perform();*/
@@ -117,14 +117,24 @@ try {
         //   .until(driver -> driver.findElement(By.name("q")));
 
 // clique dans la categorie personnes de recherche
-        driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
-        WebElement recherche1 = driver.findElement(By.xpath("//a[contains(.,'Personnes')]"));
-        new Actions(driver).moveToElement(recherche1).click().perform();
-        //a/div/div[2]/div/img
-        //div[2]/a/div/div/img
-        //driver.navigate().to("https://twitter.com/home/"+user);
-        WebElement recherche2= driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/section/div/div/div[1]/div/div/div/div[2]/div[1]/div[1]/div/div[1]/a/div/div[1]/span/spang"));
-        new Actions(driver).moveToElement(recherche1).click().perform();
+        Thread.sleep(1500);
+        trouve=false;
+        while (!trouve) {
+           try {
+               WebElement recherche1 = driver.findElement(By.xpath("//a[contains(.,'Personnes')]"));
+               new Actions(driver).moveToElement(recherche1).click().perform();
+               trouve=true;
+           }catch (NoSuchElementException e){Thread.sleep(1000);}
+        }
+
+        Thread.sleep(2000);
+
+        try {
+            WebElement searchUtil= driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/section/div/div/div[1]"));
+            new Actions(driver).moveToElement(searchUtil,10,3).click().build().perform();
+        }catch (NoSuchElementException e){
+            System.out.println("Recherche: Utilisateur non trouve");
+        }
     }
 }
 
