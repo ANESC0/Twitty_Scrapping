@@ -5,6 +5,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Twitty {
@@ -42,10 +43,131 @@ public class Twitty {
     /* Methodes */
     //public Twitty()
 
+    public ChromeDriver connexionTwitter(String user) throws InterruptedException {
 
-    public void scrapping() {
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        ChromeOptions options = new ChromeOptions();
 
-        System.setProperty("webdriver.chrome.driver", "Code/projetBotTwitter/chromedriver.exe");
+    /*
+    options.addArguments("--disable-gpu");
+    options.addArguments("--headless");
+        options.addArguments("--window-size=1400,800");*/
+        WebDriver driver = new ChromeDriver(options);
+
+
+        String email = Compte.EMAIL;
+        String mdp = Compte.MDP;
+        String nomUtil =Compte.NOM_UTILISATEUR;
+
+        // page twitter de connection
+
+
+        driver.get("https://twitter.com/i/flow/login");
+        Thread.sleep(3000);
+
+        try {
+
+            WebElement name = driver.findElement(By.xpath("//label/div/div[2]"));
+            new Actions(driver).moveToElement(name).click().perform();
+            new Actions(driver).sendKeys(email).perform();
+
+            WebElement co = driver.findElement(By.xpath("//div[6]/div/span/span"));
+            new Actions(driver).moveToElement(co).click().perform();
+
+            Thread.sleep(3000);
+
+            WebElement weMdp = driver.findElement(By.xpath("//div[3]/div/label/div/div[2]/div/input"));
+            new Actions(driver).moveToElement(weMdp).click().perform();
+            new Actions(driver).sendKeys(mdp).perform();
+
+            WebElement connexion = driver.findElement(By.xpath("//div[2]/div/div/div/span/span"));
+            new Actions(driver).moveToElement(connexion).click().perform();
+
+            //driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+
+        }catch (Exception e) {
+
+            try {
+                System.out.println("vérification requise");
+
+                // entre le nom d'utilisateur dans la case
+
+                WebElement weVerif1 = driver.findElement(By.xpath("//div[@id='layers']/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div[2]/label/div/div[2]/div/input"));
+                new Actions(driver).moveToElement(weVerif1).click().perform();
+                new Actions(driver).sendKeys(nomUtil).perform();
+
+                //clique sur suivant
+
+                //oriente le curseur sur le boutton confirmer
+                Thread.sleep(500);
+                WebElement weVerif2 = driver.findElement(By.xpath("//div[2]/div[2]/div[2]/div/div/div/div"));
+                new Actions(driver).moveToElement(weVerif2).click().perform();
+
+                Thread.sleep(500);
+                // on oriente et on clique pour mettre le mot de passe
+                WebElement weVerif3 = driver.findElement(By.xpath("//div[3]/div/label/div/div[2]/div/input"));
+                new Actions(driver).moveToElement(weVerif3).click().perform();
+                new Actions(driver).sendKeys(mdp).perform();
+
+
+                //confirme la connexion
+
+                Thread.sleep(1000);
+                WebElement weVerif4 = driver.findElement(By.xpath("//div[2]/div/div/div/span/span"));
+                new Actions(driver).moveToElement(weVerif4).click().perform();
+
+
+                //driver.navigate().to("https://twitter.com/"+user);
+            } catch(Exception ex){
+                System.out.println("verication impossible");
+
+
+            }
+        }
+        boolean trouve=false;
+        while(!trouve) {
+            try {
+                WebElement recherche = driver.findElement(By.xpath("//div[2]/div/input"));
+                new Actions(driver).moveToElement(recherche).click().perform();
+                new Actions(driver).sendKeys("@" + user).perform();
+                recherche.sendKeys(Keys.ENTER);
+                trouve=true;
+            }catch (NoSuchElementException e){
+                Thread.sleep(1000);
+            }
+        }
+
+        Thread.sleep(1500);
+        trouve=false;
+        while (!trouve) {
+            try {
+                WebElement recherche1 = driver.findElement(By.xpath("//a[contains(.,'Personnes')]"));
+                new Actions(driver).moveToElement(recherche1).click().perform();
+                trouve=true;
+            }catch (NoSuchElementException e){Thread.sleep(1000);}
+        }
+
+        Thread.sleep(2000);
+
+        try {
+            WebElement searchUtil= driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/section/div/div/div[1]"));
+            new Actions(driver).moveToElement(searchUtil,10,3).click().build().perform();
+        }catch (NoSuchElementException e){
+            System.out.println("Recherche: Utilisateur non trouve");
+        }
+        return (ChromeDriver) driver;
+    }
+
+
+
+
+
+
+
+
+    public void scrapping(String user) {
+
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
         ChromeOptions options=new ChromeOptions();
         /*
         options.addArguments("--disable-gpu");
@@ -407,7 +529,77 @@ public class Twitty {
 */
          }
 
-         public int numbersToInt(String number){
+    public void scrappFollower(WebDriver web) {
+
+        WebElement weabo = web.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[5]/div[2]/a"));
+        new Actions(web).moveToElement(weabo).click().perform();
+
+        // xpath si le premier abonnee est lke compte sur lequel le bt s est connecte
+
+        String xpathFstAD = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[1]/div/div/div/div[2]/div[1]/div/div/div[2]/div/a/div/div/span";
+
+                           //  /html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[2]/div/div/div/div[2]/div[1]/div/div/div[2]/div/a/div/div/span
+        String xpathFstSD = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[1]/div/div/div/div[2]/div/div/div/div[2]/div/a/div/div/span";
+
+        // xpatch si le premier est un utilisateur random
+
+        String xpath1AD = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[1]/div/div/div/div[2]/div[1]/div[1]/div/div[2]/div/a/div/div/span";
+
+                        //   /html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[1]/div/div/div/div[2]/div[1]/div[1]/div/div[2]/div/a/div/div/span
+        String xpath1SD = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[1]/div/div/div/div[2]/div/div[1]/div/div[2]/div/a/div/div/span";
+
+        WebElement el1 = null;
+        int i = 1;
+        if (web.findElements(By.xpath(xpathFstAD)).isEmpty()) {
+            if (web.findElements(By.xpath(xpathFstSD)).isEmpty()) {
+
+                  System.out.println("ça fonctionne");
+                if (!web.findElements(By.xpath(xpath1AD)).isEmpty()) {
+                    System.out.println("ça fonctionne6");
+                    el1 = web.findElement(By.xpath(xpath1AD));
+                } else {
+                    System.out.println("ça fonctionne2");
+                    el1 = web.findElement(By.xpath(xpath1SD));
+
+
+                }
+
+
+            }
+
+        }
+        System.out.println("ça fonctionne3");
+        i += 1;
+        int limite = this.numbersToInt(nbAbonnes.getText());
+        String[] tabFollower = new String[100];
+        tabFollower[0] = el1.getText();
+        System.out.print(tabFollower[0]);
+
+
+
+        for (i = 2; i < limite; i++) {
+
+            if (web.findElements(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[" + i + "]/div/div/div/div[2]/div/div[1]/div/div[2]/div/a/div/div/span")).isEmpty()) {
+
+                el1 = web.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[" + i + "]/div/div/div/div[2]/div/div[1]/div/div[2]/div/a/div/div/span"));
+                tabFollower[i - 1] = el1.getText();
+
+            }
+            if (web.findElements(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[" + i + "]/div/div/div/div[2]/div[1]/div[1]/div/div[2]/div/a/div/div/span")).isEmpty()) {
+                el1 = web.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[" + i + "]/div/div/div/div[2]/div[1]/div[1]/div/div[2]/div/a/div/div/span"));
+                tabFollower[i - 1] = el1.getText();
+
+            }
+        }
+
+
+        for (int j = 0; j < tabFollower.length; i++) {
+            System.out.println(tabFollower[j]);
+        }
+
+
+    }
+        public int numbersToInt(String number){
             int res;
              // cas 1: #,? k => #?00
              if(number.contains(",")){

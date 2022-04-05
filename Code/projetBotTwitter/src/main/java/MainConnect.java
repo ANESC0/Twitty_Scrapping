@@ -10,7 +10,7 @@ public class MainConnect {
 
 
     public static void main(String[] args) throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "Code/projetBotTwitter/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         Scanner sc= new Scanner(System.in);
         String user=sc.nextLine();
