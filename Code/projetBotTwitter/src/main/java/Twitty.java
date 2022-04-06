@@ -154,7 +154,7 @@ public class Twitty {
     }
 
 
-    
+
     public void scrapping(String user) {
 
         System.setProperty("webdriver.chrome.driver", CHEMIN_CHROMEDRIVER);
@@ -170,7 +170,11 @@ public class Twitty {
         driver.get("https://www.twitter.com/"+user+"");
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-
+        isPv=false;
+        desc=true;
+        local=true;
+        lien=true;
+        dtNaiss=true;
 
         if(!driver.findElements(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div[2]/div/div[1]/span")).isEmpty()){
             isPv=true;
@@ -567,12 +571,6 @@ public class Twitty {
          }
 
          */
-        isPv=false;
-        desc=true;
-        local=true;
-        lien=true;
-        dtNaiss=true;
-
         //driver.quit();
     }
     public void scrappFollower(WebDriver web) throws InterruptedException {
