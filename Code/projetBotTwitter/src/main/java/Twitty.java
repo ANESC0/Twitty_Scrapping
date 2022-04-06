@@ -10,7 +10,7 @@ public class Twitty {
 
     /* Attributs */
     private static final long DUREE_CHARGEMENT = 500;
-    private static final String CHEMIN_CHROMEDRIVER="Code/projetBotTwitter/chromedriver.exe"; // Code/projetBotTwitter/
+    private static final String CHEMIN_CHROMEDRIVER="chromedriver.exe"; // Code/projetBotTwitter/
     private String user;
     private Profil pro = new Profil();
     private boolean isPv=false;
@@ -162,7 +162,7 @@ public class Twitty {
     }
 
 
-    public void scrapping(String user) {
+    public boolean scrapping(String user) {
 
         System.setProperty("webdriver.chrome.driver", CHEMIN_CHROMEDRIVER);
         ChromeOptions options=new ChromeOptions();
@@ -579,6 +579,7 @@ public class Twitty {
 
          */
         driver.quit();
+        return !isPv;
     }
     public void scrappFollower(WebDriver web) throws InterruptedException {
         List<String> lFollowerPseudo=new ArrayList<>();
@@ -606,7 +607,7 @@ public class Twitty {
 
         new Actions(web).moveByOffset(52,-320).build().perform();
         for (int i = 1; i <= nbFollowers; i++) {
-            Thread.sleep(1500);
+            Thread.sleep(600);
             new Actions(web).click().build().perform();
             String f="";
             try{
@@ -622,9 +623,162 @@ public class Twitty {
             Thread.sleep(1000);
             js.executeScript("window.scrollBy(0," + taillesDivs[i] + ")");
         }
+        web.quit();
         for (String s:lFollowerPseudo) {
             this.scrapping(s);
         }
+    }
+
+
+
+
+    public void researchTweet(){
+
+        try {
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            long taillePage = (Long) js.executeScript("return document.body.scrollHeight");
+            System.out.println("Taille page: " + taillePage);
+
+            int nbMaxTweet = 50;
+
+            int iMax = 18;
+            int i = 1;
+            int nbTweet = 0;
+            ArrayList<String> listeTweetDate = new ArrayList<>();
+            long hauteurTweet = 0;
+            long hauteurTot = 0;
+            String lienTweet="";
+
+
+            boolean verifTweet = true;
+
+            String xpaNbTweet="/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[1]/div[1]/div/div/div/div/div[2]/div/div";
+            String nbTweetTxt=driver.findElement(By.xpath(xpaNbTweet)).getText();
+            if(!nbTweetTxt.equalsIgnoreCase("0 Tweet")) {
+
+                //verification si bas de la page atteint OU nombre de tweet à recuperer maximum atteint
+                while ((hauteurTot < taillePage) && (nbTweet < nbMaxTweet)) {
+
+                    String xpaTweet = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/section/div/div/div[" + i + "]";
+                    String xpaDate = xpaTweet + "/div/div/article/div/div/div/div[2]/div[2]/div[1]/div/div/div[1]/a/time";
+
+                    //s'il existe
+                    if (!driver.findElements(By.xpath(xpaTweet)).isEmpty()) {
+                        if (!driver.findElements(By.xpath(xpaDate)).isEmpty()) {
+                            try {
+                                String date = driver.findElement(By.xpath(xpaDate)).getAttribute("datetime");
+                                date = date.replace('T', ' ');
+                                date = date.replace("Z", "");
+                                String newLine = System.getProperty("line.separator");
+
+                                //et si pas encore enregistre
+                                if (!listeTweetDate.contains(date)) {
+                                    //ET PAS UN RETWEET
+                                    String xpaRT = xpaTweet + "/div/div/article/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/a";
+                                    if (driver.findElements(By.xpath(xpaRT)).isEmpty()) {
+
+         listeTweetDate.add(date);
+
+         //incrementation et affichage de la date du tweet
+         nbTweet += 1;
+         System.out.println("\n Date Tweet " + nbTweet + ": " + date);
+
+         String xpaLien = xpaTweet + "/div/div/article/div/div/div/div[2]/div[2]/div[1]/div/div/div[1]/a";
+         try {
+         lienTweet = driver.findElement(By.xpath(xpaLien)).getAttribute("href");
+         System.out.println("Lien: " + lienTweet);
+         } catch (Exception e) {
+         lienTweet = "ERREUR";
+         System.out.println("Lien: " + "(Erreur: pas de lien rencontre)");
+         }
+
+         //affichage texte tweet
+         String xpaDivTweet = xpaTweet + "/div/div/article/div/div/div/div[2]/div[2]/div[2]/div[1]/div";
+         try {
+         List<WebElement> childDivTweet = driver.findElement(By.xpath(xpaDivTweet)).findElements(By.xpath("*"));
+         String contenuTweet = "";
+         System.out.println("-----------------------------------------------------");
+         for (WebElement we : childDivTweet) {
+         if (!we.getText().isEmpty()) {
+         contenuTweet += we.getText() + "" + newLine;
+         System.out.println(we.getText() + "" + newLine + "-----------------------------------------------------");
+         }
+         }
+         //verif images/media sans div en dessous
+         } catch (Exception e) {
+         System.out.println("<--MEDIA-->");
+         System.out.println(newLine + "-----------------------------------------------------");
+         }
+
+
+         //enregistrement nbLike & nbRT
+         String xpaNbLikeSpan = xpaTweet + "/div/div/article/div/div/div/div[2]/div[2]/div[2]/div[3]/div/div[3]/div/div/div[2]/span/span/span";
+         String xpaNbRTSpan = xpaTweet + "/div/div/article/div/div/div/div[2]/div[2]/div[2]/div[3]/div/div[2]/div/div/div[2]/span/span/span";
+         String nbLike = "0";
+         String nbRT = "0";
+         //si xpa vide=0, sinon voir le contenu
+         if (!driver.findElements(By.xpath(xpaNbLikeSpan)).isEmpty()) {
+         nbLike = driver.findElement(By.xpath(xpaNbLikeSpan)).getText();
+         System.out.println("int: " + numbersToInt(nbLike));
+         }
+         if (!driver.findElements(By.xpath(xpaNbRTSpan)).isEmpty()) {
+         nbRT = driver.findElement(By.xpath(xpaNbRTSpan)).getText();
+         System.out.println("int: " + numbersToInt(nbRT));
+         }
+         System.out.println("nbLike: " + nbLike);
+         System.out.println("nbRT: " + nbRT + newLine);
+
+         }
+         //hauteur totale + hauteur du tweet
+         try {
+         hauteurTweet = driver.findElement(By.xpath(xpaTweet)).getSize().getHeight();
+         } catch (Exception e) {
+         }
+         hauteurTot += hauteurTweet;
+         //scroll de la taille du tweet
+         js.executeScript("window.scrollTo(0," + hauteurTot + ")");
+         //mise a jour de la taille de la page
+         taillePage = (Long) js.executeScript("return document.body.scrollHeight");
+         Thread.sleep(DUREE_CHARGEMENT);
+         }
+         //passage au prochain div[i]
+         i = i + 1;
+         }catch (NoSuchElementException e){i=1;}
+         //pas de date=PAS UN TWEET
+         } else {
+         //scroll du probleme
+         hauteurTweet = driver.findElement(By.xpath(xpaTweet)).getSize().getHeight();
+         hauteurTot = hauteurTot + hauteurTweet;
+         js.executeScript("window.scrollTo(0," + hauteurTot + ")");
+         i = 1;
+         taillePage = (Long) js.executeScript("return document.body.scrollHeight");
+         Thread.sleep(DUREE_CHARGEMENT);
+         }
+         } else {
+         i = 1;
+         }
+         //verif div[i] maximum atteint
+         if (i > iMax)
+         i = 1;
+         }
+         }
+
+         /**
+         TODO - nbTweetMax,
+         - tweets recuperes dans le bon ordre
+         - (tweets manquants?)
+         - probleme image sans texte
+
+*/
+         } catch(NoSuchWindowException e){
+         System.out.println("Arret du programme. (fenetre fermee)");
+         } catch(WebDriverException e){
+         System.out.println("Page non accessible");
+         }
+         catch (Exception e) {
+         e.printStackTrace();
+         }
+
     }
 
 
