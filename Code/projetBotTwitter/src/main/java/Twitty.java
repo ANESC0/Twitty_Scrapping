@@ -10,7 +10,7 @@ public class Twitty {
 
     /* Attributs */
     private static final long DUREE_CHARGEMENT = 500;
-    private static final String CHEMIN_CHROMEDRIVER="chromedriver.exe";
+    private static final String CHEMIN_CHROMEDRIVER="Code/projetBotTwitter/chromedriver.exe"; // Code/projetBotTwitter/
     private String user;
     private Profil pro = new Profil();
     private boolean isPv=false;
@@ -545,125 +545,28 @@ public class Twitty {
         int nbFollowers = numbersToInt(this.pro.getNbAbonnes());
         if (nbFollowers > 18)
             nbFollowers = 18;
+        JavascriptExecutor js = (JavascriptExecutor) web;
+
+        int[] taillesDivs = new int[nbFollowers+1];
+        taillesDivs[0]=0;
         for (int i = 1; i <= nbFollowers; i++) {
             String xpaDivAbonnees = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div/div[" + i + "]";
             WebElement divABonnee = web.findElement(By.xpath(xpaDivAbonnees));
-            if (!divABonnee.findElements(By.xpath("./div/div/div")).isEmpty()) {
-                new Actions(web).moveToElement(divABonnee).click().build().perform();
-                Thread.sleep(1000);
-                //String xpaNomUtilisateur = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div[1]/div/div/span[1]/span";
-                //WebElement weNomUtil = web.findElement(By.xpath(xpaNomUtilisateur));
-                //System.out.println(weNomUtil.getText());
-                scrappFollow(web);
-                System.out.println(i);
-                web.navigate().back();
-                Thread.sleep(1000);
-            }
+            taillesDivs[i]=divABonnee.getSize().getHeight();
+        }
+        System.out.println(taillesDivs);
+
+        new Actions(web).moveByOffset(52,-320).build().perform();
+        for (int i = 1; i <= nbFollowers; i++) {
+            Thread.sleep(1500);
+            new Actions(web).click().build().perform();
+            scrappFollow(web);
+            System.out.println(i);
+            web.navigate().back();
+            Thread.sleep(1000);
+            js.executeScript("window.scrollBy(0," + taillesDivs[i] + ")");
 
         }
-
-
-        /*String xpaDivAbonnees="//*[@id=\"react-root\"]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div";
-        List<WebElement> divsAbonnees=web.findElement(By.xpath(xpaDivAbonnees)).findElements(By.xpath("*"));
-        System.out.println("tt"+divsAbonnees);
-        for (WebElement e:divsAbonnees) {
-            System.out.println(e);
-            //verif dernier div vide present
-            int attempts=0;
-            while (attempts<5) {
-                try{
-                    if(!e.findElements(By.xpath("./div/div/div")).isEmpty()) {
-                        new Actions(web).moveToElement(e, 50, 1).click().build().perform();
-                        Thread.sleep(1000);
-                        String xpaNomUtilisateur = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div[1]/div/div/span[1]/span";
-                        WebElement weNomUtil = web.findElement(By.xpath(xpaNomUtilisateur));
-                        System.out.println(weNomUtil.getText());
-
-                        web.navigate().back();
-                        break;
-                    }
-                }catch (StaleElementReferenceException ex){}
-                attempts++;
-                Thread.sleep(500);
-            }
-        }*/
-
-        /*for (int i=1;i<18;i++){
-            String xpaDivAbonnees="//*[@id=\"react-root\"]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div";
-            if(!web.findElements(By.xpath(xpaDivAbonnees)).isEmpty()) {
-                WebElement divAbonnee = web.findElement(By.xpath(xpaDivAbonnees));
-                System.out.println(divAbonnee);
-                new Actions(web).moveToElement(divAbonnee, 50, 1).click().build().perform();
-
-
-                web.navigate().back();
-            }
-        }*/
-
-        /*
-        // xpath si le premier abonnee est lke compte sur lequel le bt s est connecte
-
-        String xpathFstAD = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[1]/div/div/div/div[2]/div[1]/div/div/div[2]/div/a/div/div/span";
-
-                           //  /html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[2]/div/div/div/div[2]/div[1]/div/div/div[2]/div/a/div/div/span
-        String xpathFstSD = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[1]/div/div/div/div[2]/div/div/div/div[2]/div/a/div/div/span";
-
-        // xpatch si le premier est un utilisateur random
-
-        String xpath1AD = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[1]/div/div/div/div[2]/div[1]/div[1]/div/div[2]/div/a/div/div/span";
-
-                        //   /html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[1]/div/div/div/div[2]/div[1]/div[1]/div/div[2]/div/a/div/div/span
-        String xpath1SD = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[1]/div/div/div/div[2]/div/div[1]/div/div[2]/div/a/div/div/span";
-
-        WebElement el1 = null;
-        int i = 1;
-        if (web.findElements(By.xpath(xpathFstAD)).isEmpty()) {
-            if (web.findElements(By.xpath(xpathFstSD)).isEmpty()) {
-
-                  System.out.println("ça fonctionne");
-                if (!web.findElements(By.xpath(xpath1AD)).isEmpty()) {
-                    System.out.println("ça fonctionne6");
-                    el1 = web.findElement(By.xpath(xpath1AD));
-                } else {
-                    System.out.println("ça fonctionne2");
-                    el1 = web.findElement(By.xpath(xpath1SD));
-
-
-                }
-
-
-            }
-
-        }
-        System.out.println("ça fonctionne3");
-        i += 1;
-        int limite = this.numbersToInt(nbAbonnes.getText());
-        String[] tabFollower = new String[100];
-        tabFollower[0] = el1.getText();
-        System.out.print(tabFollower[0]);
-
-
-
-        for (i = 2; i < limite; i++) {
-
-            if (web.findElements(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[" + i + "]/div/div/div/div[2]/div/div[1]/div/div[2]/div/a/div/div/span")).isEmpty()) {
-
-                el1 = web.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[" + i + "]/div/div/div/div[2]/div/div[1]/div/div[2]/div/a/div/div/span"));
-                tabFollower[i - 1] = el1.getText();
-
-            }
-            if (web.findElements(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[" + i + "]/div/div/div/div[2]/div[1]/div[1]/div/div[2]/div/a/div/div/span")).isEmpty()) {
-                el1 = web.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/section/div/div/div[" + i + "]/div/div/div/div[2]/div[1]/div[1]/div/div[2]/div/a/div/div/span"));
-                tabFollower[i - 1] = el1.getText();
-
-            }
-        }
-
-
-        for (int j = 0; j < tabFollower.length; i++) {
-            System.out.println(tabFollower[j]);
-        }
-*/
     }
 
         public void scrappFollow(WebDriver driver) {
