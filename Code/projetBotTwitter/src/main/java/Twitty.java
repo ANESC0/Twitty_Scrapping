@@ -8,12 +8,12 @@ import java.util.concurrent.*;
 
 public class Twitty {
 
-    private static final long DUREE_CHARGEMENT = 500;
-    private static final String CHEMIN_CHROMEDRIVER="Code/projetBotTwitter/chromedriver.exe";
-
     /* Attributs */
+    private static final long DUREE_CHARGEMENT = 500;
+    private static final String CHEMIN_CHROMEDRIVER="chromedriver.exe";
     private String user;
     private Profil pro = new Profil();
+    private boolean isPv=false;
     private boolean desc=true;
     private boolean local=true;
     private boolean lien=true;
@@ -175,6 +175,12 @@ public class Twitty {
         driver.get("https://www.twitter.com/"+user+"");
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
+
+
+        if(!driver.findElements(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div[1]/div/div/span[2]/svg")).isEmpty()){
+            isPv=true;
+            System.out.println("il y a le cadenas");
+        }
 
 
         try {
@@ -523,7 +529,7 @@ public class Twitty {
 
 */
 
-        driver.quit();
+        //driver.quit();
          }
 
     public void scrappFollower(WebDriver web) throws InterruptedException {
@@ -536,18 +542,19 @@ public class Twitty {
         Thread.sleep(1500);
 
         //recup divs des abonnees
-        int nbFollowers=numbersToInt(this.pro.getNbAbonnes());
-        if(nbFollowers>18)
-            nbFollowers=18;
+        int nbFollowers = numbersToInt(this.pro.getNbAbonnes());
+        if (nbFollowers > 18)
+            nbFollowers = 18;
         for (int i = 1; i <= nbFollowers; i++) {
-            String xpaDivAbonnees="/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div/div["+i+"]";
-            WebElement divABonnee=web.findElement(By.xpath(xpaDivAbonnees));
-            if(!divABonnee.findElements(By.xpath("./div/div/div")).isEmpty()) {
-                new Actions(web).moveToElement(divABonnee, 50, 1).click().build().perform();
+            String xpaDivAbonnees = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div/div[" + i + "]";
+            WebElement divABonnee = web.findElement(By.xpath(xpaDivAbonnees));
+            if (!divABonnee.findElements(By.xpath("./div/div/div")).isEmpty()) {
+                new Actions(web).moveToElement(divABonnee).click().build().perform();
                 Thread.sleep(1000);
                 //String xpaNomUtilisateur = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div[1]/div/div/span[1]/span";
                 //WebElement weNomUtil = web.findElement(By.xpath(xpaNomUtilisateur));
                 //System.out.println(weNomUtil.getText());
+                scrappFollow(web);
                 System.out.println(i);
                 web.navigate().back();
                 Thread.sleep(1000);
@@ -657,8 +664,180 @@ public class Twitty {
             System.out.println(tabFollower[j]);
         }
 */
-
     }
+
+        public void scrappFollow(WebDriver driver) {
+
+
+
+
+            try {
+                pseudo = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[1]/div/div/span[1]/span"));
+                System.out.println("pseudo de l'utilisateur : " + pseudo.getText());
+                pro.setPseudo(pseudo.getText());
+
+            } catch (Exception e) {
+                System.out.println("pseudo qui comporte un emoji ou caractere spéciaux");
+            }
+
+            /*
+             * Description
+             */
+            try {
+                description = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/div/span"));
+                System.out.println("description : " + description.getText());
+                pro.setDescription(description.getText());
+            } catch (Exception e) {
+                System.out.println("Description introuvable");
+                desc = false;
+            }
+
+
+            //localisation
+
+            try {
+                if (desc == true) {
+                    localisation = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div/span[1]/span/span"));
+                }
+                if (desc == false) {
+
+                    localisation = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/span[1]/span/span"));
+                }
+                System.out.println("localisation : " + localisation.getText());
+                pro.setLocalisation(localisation.getText());
+
+            } catch (Exception e) {
+                local = false;
+                System.out.println("localisation avec écritures spéciaux ou inexistante");
+            }
+
+            // nbabonnement
+
+            try {
+                if ((desc == true) & (local == true)) {
+                    nbAbonnement = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[5]/div[1]/a/span[1]/span"));
+
+                }
+                if ((desc == false) & (local == true)) {
+                    nbAbonnement = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div[1]/a/span[1]/span"));
+
+                }
+                if ((desc == false) & (local == false)) {
+                    nbAbonnement = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div[1]/a/span[1]/span"));
+                }
+
+                if ((desc == true) & (local == false)) {
+                    nbAbonnement = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[5]/div[1]/a/span[1]/span"));
+                }
+                System.out.println("nombre d'abonnements : " + nbAbonnement.getText());
+                pro.setNbAbonnement(nbAbonnement.getText());
+
+            } catch (Exception e) {
+                System.out.println("le nombre d'abonnement ne s'affiche pas");
+            }
+
+
+            // nbAbonnees
+
+            try {
+                if ((desc == true) && (local == true)) {
+                    nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[5]/div[2]/a/span[1]/span"));
+                    System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
+                }
+                if ((desc == false) && (local == true)) {
+                    nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div[2]/a/span[1]/span"));
+                    System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
+
+                }
+                if ((desc == false) && (local == false)) {
+                    nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div[2]/a/span[1]/span"));
+                    System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
+                }
+
+                if ((desc == true) & (local == false)) {
+                    nbAbonnes = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[5]/div[2]/a/span[1]/span"));
+                    System.out.println("nombre d'abonnés : " + nbAbonnes.getText());
+                }
+                pro.setNbAbonnes(nbAbonnes.getText());
+
+            } catch (Exception e) {
+                System.out.println("le nombre d'abonnés ne s'affiche pas");
+            }
+
+            // DateNaissance
+
+            try {
+
+                if (desc == true & local == true) {
+                    dateNaiss = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[2]"));
+
+                }
+                if (desc == false & local == true) {
+                    dateNaiss = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[3]/div/span[2]"));
+
+                }
+                if (desc == false & local == false) {
+                    dateNaiss = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[3]/div/span[1]"));
+                }
+
+                if (desc == true & local == false) {
+                    dateNaiss = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[1]"));
+                }
+                if (dateNaiss.getText().substring(0, 1).equals("N")) {
+                    System.out.println("date de naissance : " + dateNaiss.getText());
+
+                } else {
+                    dtNaiss = false;
+
+                }
+                pro.setDateNaiss(dateNaiss.getText());
+
+            } catch (Exception e) {
+                System.out.println("le profil n'a pas mis sa date de naissance en public");
+                dtNaiss = false;
+
+            }
+
+            // a rejoin twitter
+
+
+            try {
+                if (desc == true && local == true && dtNaiss == true) {
+                    aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[3]/span"));
+                }
+                if (desc == false && local == true && dtNaiss == true) {
+                    aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[3]/div/span[3]/span"));
+                }
+                if (desc == true && local == false && dtNaiss == true) {
+                    aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[2]/span"));
+                }
+                if (desc == false && local == false && dtNaiss == true) {
+                    aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[3]/div/span[2]/span"));
+                }
+
+
+                if (desc == false && local == false && dtNaiss == false) {
+                    aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/span/span"));
+                }
+                if (desc == false && local == true && dtNaiss == false) {
+                    aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/span[2]/span"));
+
+                }
+                if ((desc == true) && (local == false) && (dtNaiss == false)) {
+                    aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[4]/div/span/span"));
+                }
+                if ((desc == true) && (local == true) && (dtNaiss == false)) {
+                    aRejoinTwitter = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[4]/div/span[2]/span"));
+                }
+                System.out.println(aRejoinTwitter.getText());
+                pro.setaRejoinTwitter(aRejoinTwitter.getText());
+
+            } catch (Exception e) {
+                System.out.println("a rejoin twitter indisponible");
+            }
+        }
+
+
         public int numbersToInt(String number){
             int res;
              // cas 1: #,? k => #?00

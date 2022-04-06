@@ -25,9 +25,9 @@ public class Main  {
 
          Twitty tw=new Twitty(user);
          tw.scrapping(user);
-        ChromeDriver ch= tw.connexionTwitter(user);
+        //ChromeDriver ch= tw.connexionTwitter(user);
         //tw.scrapping(user);
-        tw.scrappFollower(ch);
+        //tw.scrappFollower(ch);
 
         //Main m = new Main();
 
