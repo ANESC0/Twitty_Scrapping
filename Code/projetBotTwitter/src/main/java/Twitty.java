@@ -43,7 +43,7 @@ public class Twitty {
 
     public ChromeDriver connexionTwitter(String user) throws InterruptedException {
 
-        System.setProperty("webdriver.chrome.driver", "Code/projetBotTwitter/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
 
     /*
@@ -522,9 +522,12 @@ public class Twitty {
          }
 
 */
+
+        driver.quit();
          }
 
     public void scrappFollower(WebDriver web) throws InterruptedException {
+        
 
         //click sur abonnees
         WebElement weabo = web.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[5]/div[2]/a"));
