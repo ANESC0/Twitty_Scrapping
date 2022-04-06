@@ -17,27 +17,24 @@ public class Main  {
 
     public static void main(String[] args) throws InterruptedException {
 
-
-
-        Scanner sc = new Scanner(System.in);
-        System.out.println("saisissez un utilisateur");
-        String user= sc.nextLine();
+         Scanner sc = new Scanner(System.in);
+         System.out.println("saisissez un utilisateur");
+         String user= sc.nextLine();
 
          Twitty tw=new Twitty(user);
-         //tw.scrapping(user);
-         //ChromeDriver ch = tw.connexionTwitter(user);
+         /*scrap infos de bases*/
+         tw.scrapping(user);
+         /*scrap tweets*/
          tw.researchTweet(user);
-        //Main m = new Main();
-
-        /* connexion **/
-
-        //ConnexionTwitter ct = new ConnexionTwitter(driver);
-
-
-
-
-
-
+         /* connexion **/
+               //autre page
+         ChromeDriver ch = tw.connexionTwitter(user);
+         /*scrap followers*/
+         ch=tw.scrappFollower(ch);
+         /*scrap followings*/
+         tw.scrapping(user);
+         ch=tw.scrappFollowing(ch);
+         ch.quit();
     }
 
 }
