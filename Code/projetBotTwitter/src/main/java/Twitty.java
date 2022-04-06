@@ -51,108 +51,115 @@ public class Twitty {
     options.addArguments("--disable-gpu");
     options.addArguments("--headless");*/
         WebDriver driver = new ChromeDriver(options);
+        if (!isPv) {
 
 
-        String email = Compte.EMAIL;
-        String mdp = Compte.MDP;
-        String nomUtil =Compte.NOM_UTILISATEUR;
 
-        // page twitter de connection
+            String email = Compte.EMAIL;
+            String mdp = Compte.MDP;
+            String nomUtil = Compte.NOM_UTILISATEUR;
+
+            // page twitter de connection
 
 
-        driver.get("https://twitter.com/i/flow/login");
-        Thread.sleep(3000);
-
-        try {
-
-            WebElement name = driver.findElement(By.xpath("//label/div/div[2]"));
-            new Actions(driver).moveToElement(name).click().perform();
-            new Actions(driver).sendKeys(email).perform();
-
-            WebElement co = driver.findElement(By.xpath("//div[6]/div/span/span"));
-            new Actions(driver).moveToElement(co).click().perform();
-
+            driver.get("https://twitter.com/i/flow/login");
             Thread.sleep(3000);
 
-            WebElement weMdp = driver.findElement(By.xpath("//div[3]/div/label/div/div[2]/div/input"));
-            new Actions(driver).moveToElement(weMdp).click().perform();
-            new Actions(driver).sendKeys(mdp).perform();
-
-            WebElement connexion = driver.findElement(By.xpath("//div[2]/div/div/div/span/span"));
-            new Actions(driver).moveToElement(connexion).click().perform();
-
-            //driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-
-        }catch (Exception e) {
-
             try {
-                System.out.println("vérification requise");
 
-                // entre le nom d'utilisateur dans la case
+                WebElement name = driver.findElement(By.xpath("//label/div/div[2]"));
+                new Actions(driver).moveToElement(name).click().perform();
+                new Actions(driver).sendKeys(email).perform();
 
-                WebElement weVerif1 = driver.findElement(By.xpath("//div[@id='layers']/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div[2]/label/div/div[2]/div/input"));
-                new Actions(driver).moveToElement(weVerif1).click().perform();
-                new Actions(driver).sendKeys(nomUtil).perform();
+                WebElement co = driver.findElement(By.xpath("//div[6]/div/span/span"));
+                new Actions(driver).moveToElement(co).click().perform();
 
-                //clique sur suivant
+                Thread.sleep(3000);
 
-                //oriente le curseur sur le boutton confirmer
-                Thread.sleep(500);
-                WebElement weVerif2 = driver.findElement(By.xpath("//div[2]/div[2]/div[2]/div/div/div/div"));
-                new Actions(driver).moveToElement(weVerif2).click().perform();
-
-                Thread.sleep(500);
-                // on oriente et on clique pour mettre le mot de passe
-                WebElement weVerif3 = driver.findElement(By.xpath("//div[3]/div/label/div/div[2]/div/input"));
-                new Actions(driver).moveToElement(weVerif3).click().perform();
+                WebElement weMdp = driver.findElement(By.xpath("//div[3]/div/label/div/div[2]/div/input"));
+                new Actions(driver).moveToElement(weMdp).click().perform();
                 new Actions(driver).sendKeys(mdp).perform();
-                new Actions(driver).moveToElement(weVerif3).click().perform();
-                Thread.sleep(300);
-                new Actions(driver).sendKeys(Keys.ENTER).build().perform();
-                //weVerif3.sendKeys(Keys.ENTER);
 
-                Thread.sleep(1000);
+                WebElement connexion = driver.findElement(By.xpath("//div[2]/div/div/div/span/span"));
+                new Actions(driver).moveToElement(connexion).click().perform();
 
-                //driver.navigate().to("https://twitter.com/"+user);
-            } catch(Exception ex){
-                System.out.println("verication impossible");
+                //driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+
+            } catch (Exception e) {
+
+                try {
+                    System.out.println("vérification requise");
+
+                    // entre le nom d'utilisateur dans la case
+
+                    WebElement weVerif1 = driver.findElement(By.xpath("//div[@id='layers']/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div[2]/label/div/div[2]/div/input"));
+                    new Actions(driver).moveToElement(weVerif1).click().perform();
+                    new Actions(driver).sendKeys(nomUtil).perform();
+
+                    //clique sur suivant
+
+                    //oriente le curseur sur le boutton confirmer
+                    Thread.sleep(500);
+                    WebElement weVerif2 = driver.findElement(By.xpath("//div[2]/div[2]/div[2]/div/div/div/div"));
+                    new Actions(driver).moveToElement(weVerif2).click().perform();
+
+                    Thread.sleep(500);
+                    // on oriente et on clique pour mettre le mot de passe
+                    WebElement weVerif3 = driver.findElement(By.xpath("//div[3]/div/label/div/div[2]/div/input"));
+                    new Actions(driver).moveToElement(weVerif3).click().perform();
+                    new Actions(driver).sendKeys(mdp).perform();
+                    new Actions(driver).moveToElement(weVerif3).click().perform();
+                    Thread.sleep(300);
+                    new Actions(driver).sendKeys(Keys.ENTER).build().perform();
+                    //weVerif3.sendKeys(Keys.ENTER);
+
+                    Thread.sleep(1000);
+
+                    //driver.navigate().to("https://twitter.com/"+user);
+                } catch (Exception ex) {
+                    System.out.println("verication impossible");
+                }
             }
-        }
-        boolean trouve=false;
-        while(!trouve) {
-            try {
-                WebElement recherche = driver.findElement(By.xpath("//div[2]/div/input"));
-                new Actions(driver).moveToElement(recherche).click().perform();
-                new Actions(driver).sendKeys("@" + user).perform();
-                Thread.sleep(400);
-                recherche.sendKeys(Keys.ENTER);
-                trouve=true;
-            }catch (NoSuchElementException e){
-                Thread.sleep(1000);
+            boolean trouve = false;
+            while (!trouve) {
+                try {
+                    WebElement recherche = driver.findElement(By.xpath("//div[2]/div/input"));
+                    new Actions(driver).moveToElement(recherche).click().perform();
+                    new Actions(driver).sendKeys("@" + user).perform();
+                    Thread.sleep(400);
+                    recherche.sendKeys(Keys.ENTER);
+                    trouve = true;
+                } catch (NoSuchElementException e) {
+                    Thread.sleep(1000);
+                }
             }
-        }
 
-        Thread.sleep(1500);
-        trouve=false;
-        while (!trouve) {
+            Thread.sleep(1500);
+            trouve = false;
+            while (!trouve) {
+                try {
+                    WebElement recherche1 = driver.findElement(By.xpath("//a[contains(.,'Personnes')]"));
+                    new Actions(driver).moveToElement(recherche1).click().perform();
+                    trouve = true;
+                } catch (NoSuchElementException e) {
+                    Thread.sleep(1000);
+                }
+            }
+
+            Thread.sleep(2000);
+
             try {
-                WebElement recherche1 = driver.findElement(By.xpath("//a[contains(.,'Personnes')]"));
-                new Actions(driver).moveToElement(recherche1).click().perform();
-                trouve=true;
-            }catch (NoSuchElementException e){Thread.sleep(1000);}
-        }
-
-        Thread.sleep(2000);
-
-        try {
-            WebElement searchUtil= driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/section/div/div/div[1]"));
-            new Actions(driver).moveToElement(searchUtil,10,3).click().build().perform();
-        }catch (NoSuchElementException e){
-            System.out.println("Recherche: Utilisateur non trouve");
+                WebElement searchUtil = driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/section/div/div/div[1]"));
+                new Actions(driver).moveToElement(searchUtil, 10, 3).click().build().perform();
+            } catch (NoSuchElementException e) {
+                System.out.println("Recherche: Utilisateur non trouve");
+                return (ChromeDriver) driver;
+            }
+        } else {
+            System.out.println("Compte prive");
         }
         return (ChromeDriver) driver;
     }
-
 
 
     public void scrapping(String user) {
@@ -571,7 +578,7 @@ public class Twitty {
          }
 
          */
-        //driver.quit();
+        driver.quit();
     }
     public void scrappFollower(WebDriver web) throws InterruptedException {
         List<String> lFollowerPseudo=new ArrayList<>();
@@ -615,10 +622,13 @@ public class Twitty {
             Thread.sleep(1000);
             js.executeScript("window.scrollBy(0," + taillesDivs[i] + ")");
         }
+        for (String s:lFollowerPseudo) {
+            this.scrapping(s);
+        }
     }
 
 
-        public int numbersToInt(String number){ 
+        public int numbersToInt(String number){
             int res;
              // cas 1: #,? k => #?00
              if(number.contains(",")){
