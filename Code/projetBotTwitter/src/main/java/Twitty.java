@@ -9,6 +9,7 @@ import java.util.concurrent.*;
 public class Twitty {
 
     private static final long DUREE_CHARGEMENT = 500;
+    private static final String CHEMIN_CHROMEDRIVER="Code/projetBotTwitter/chromedriver.exe";
 
     /* Attributs */
     private String user;
@@ -43,13 +44,12 @@ public class Twitty {
 
     public ChromeDriver connexionTwitter(String user) throws InterruptedException {
 
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", CHEMIN_CHROMEDRIVER);
         ChromeOptions options = new ChromeOptions();
 
     /*
     options.addArguments("--disable-gpu");
-    options.addArguments("--headless");
-        options.addArguments("--window-size=1400,800");*/
+    options.addArguments("--headless");*/
         WebDriver driver = new ChromeDriver(options);
 
 
@@ -162,7 +162,7 @@ public class Twitty {
 
     public void scrapping(String user) {
 
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", CHEMIN_CHROMEDRIVER);
         ChromeOptions options=new ChromeOptions();
         /*
         options.addArguments("--disable-gpu");
@@ -536,7 +536,27 @@ public class Twitty {
         Thread.sleep(1500);
 
         //recup divs des abonnees
-        String xpaDivAbonnees="//*[@id=\"react-root\"]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div";
+        int nbFollowers=numbersToInt(this.pro.getNbAbonnes());
+        if(nbFollowers>18)
+            nbFollowers=18;
+        for (int i = 1; i <= nbFollowers; i++) {
+            String xpaDivAbonnees="/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div/div["+i+"]";
+            WebElement divABonnee=web.findElement(By.xpath(xpaDivAbonnees));
+            if(!divABonnee.findElements(By.xpath("./div/div/div")).isEmpty()) {
+                new Actions(web).moveToElement(divABonnee, 50, 1).click().build().perform();
+                Thread.sleep(1000);
+                //String xpaNomUtilisateur = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div[1]/div/div/span[1]/span";
+                //WebElement weNomUtil = web.findElement(By.xpath(xpaNomUtilisateur));
+                //System.out.println(weNomUtil.getText());
+                System.out.println(i);
+                web.navigate().back();
+                Thread.sleep(1000);
+            }
+
+        }
+
+
+        /*String xpaDivAbonnees="//*[@id=\"react-root\"]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div";
         List<WebElement> divsAbonnees=web.findElement(By.xpath(xpaDivAbonnees)).findElements(By.xpath("*"));
         System.out.println("tt"+divsAbonnees);
         for (WebElement e:divsAbonnees) {
@@ -559,7 +579,7 @@ public class Twitty {
                 attempts++;
                 Thread.sleep(500);
             }
-        }
+        }*/
 
         /*for (int i=1;i<18;i++){
             String xpaDivAbonnees="//*[@id=\"react-root\"]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div";
