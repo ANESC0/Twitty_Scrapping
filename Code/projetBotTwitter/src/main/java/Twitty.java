@@ -610,6 +610,7 @@ public class Twitty {
                 //compte privee
                 f=web.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div[1]/div[2]/div[2]/div/div/div[2]/div/div/div/span")).getText();
             }
+            f=f.replace("@","");
             lFollowerPseudo.add(f);
             System.out.println(i+" : "+f);
             web.navigate().back();
