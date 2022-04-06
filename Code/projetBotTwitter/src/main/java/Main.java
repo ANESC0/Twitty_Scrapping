@@ -24,9 +24,9 @@ public class Main  {
         String user= sc.nextLine();
 
          Twitty tw=new Twitty(user);
-         tw.scrapping(user);
-         ChromeDriver ch = tw.connexionTwitter(user);
-         tw.scrappFollower(ch);
+         //tw.scrapping(user);
+         //ChromeDriver ch = tw.connexionTwitter(user);
+         tw.researchTweet(user);
         //Main m = new Main();
 
         /* connexion **/
