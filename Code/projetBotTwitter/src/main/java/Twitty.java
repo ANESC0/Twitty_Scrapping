@@ -527,7 +527,7 @@ public class Twitty {
          }
 
     public void scrappFollower(WebDriver web) throws InterruptedException {
-        
+
 
         //click sur abonnees
         WebElement weabo = web.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div/div/div[5]/div[2]/a"));

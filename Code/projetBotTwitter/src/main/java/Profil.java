@@ -3,6 +3,7 @@ public class Profil {
     /* Attributs */
 
     private String pseudo;
+    private String arobase;
     private String description;
     private String localisation;
     private String nbAbonnement;
@@ -13,9 +14,9 @@ public class Profil {
 
 
     /* Constructeur */
-
     public Profil() {
         this.pseudo = "";
+        this.arobase= "";
         this.description = "";
         this.localisation = "";
         this.nbAbonnement = "";
@@ -89,6 +90,15 @@ public class Profil {
         }
         return (nbMois + "-" + annee1);
     }
+
+    public String getArobase() {
+        return arobase;
+    }
+
+    public void setArobase(String arobase) {
+        this.arobase = arobase;
+    }
+
 
     public String getPseudo() {
         return pseudo;
