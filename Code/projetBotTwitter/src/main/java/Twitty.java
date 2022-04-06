@@ -106,16 +106,16 @@ public class Twitty {
                 WebElement weVerif3 = driver.findElement(By.xpath("//div[3]/div/label/div/div[2]/div/input"));
                 new Actions(driver).moveToElement(weVerif3).click().perform();
                 new Actions(driver).sendKeys(mdp).perform();
-                Thread.sleep(100);
-                weVerif3.sendKeys(Keys.ENTER);
+                new Actions(driver).moveToElement(weVerif3).click().perform();
+                Thread.sleep(300);
+                new Actions(driver).sendKeys(Keys.ENTER).build().perform();
+                //weVerif3.sendKeys(Keys.ENTER);
 
                 Thread.sleep(1000);
 
                 //driver.navigate().to("https://twitter.com/"+user);
             } catch(Exception ex){
                 System.out.println("verication impossible");
-
-
             }
         }
         boolean trouve=false;
@@ -535,25 +535,26 @@ public class Twitty {
         //recup divs des abonnees
         String xpaDivAbonnees="//*[@id=\"react-root\"]/div/div/div[2]/main/div/div/div/div[1]/div/section/div/div";
         List<WebElement> divsAbonnees=web.findElement(By.xpath(xpaDivAbonnees)).findElements(By.xpath("*"));
+        System.out.println("tt"+divsAbonnees);
         for (WebElement e:divsAbonnees) {
             System.out.println(e);
             //verif dernier div vide present
-            if(!e.findElements(By.xpath("./div/div/div")).isEmpty()){
-                new Actions(web).moveToElement(e, 50, 1).click().build().perform();
-                int attempts=0;
-                while (attempts<5) {
-                    try {
+            int attempts=0;
+            while (attempts<5) {
+                try{
+                    if(!e.findElements(By.xpath("./div/div/div")).isEmpty()) {
+                        new Actions(web).moveToElement(e, 50, 1).click().build().perform();
                         Thread.sleep(1000);
-                        if (!e.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div[2]/div/div/div/span")).getText().equalsIgnoreCase(this.user)) {
-                            String xpaNomUtilisateur = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div[1]/div/div/span[1]/span";
-                            WebElement weNomUtil = web.findElement(By.xpath(xpaNomUtilisateur));
-                            System.out.println(weNomUtil.getText());
-                        }
+                        String xpaNomUtilisateur = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[2]/div/div/div[1]/div/div/span[1]/span";
+                        WebElement weNomUtil = web.findElement(By.xpath(xpaNomUtilisateur));
+                        System.out.println(weNomUtil.getText());
+
                         web.navigate().back();
                         break;
-                    }catch (StaleElementReferenceException ex){}
-                    attempts++;
-                }
+                    }
+                }catch (StaleElementReferenceException ex){}
+                attempts++;
+                Thread.sleep(500);
             }
         }
 

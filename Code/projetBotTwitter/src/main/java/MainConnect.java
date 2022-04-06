@@ -132,7 +132,7 @@ try {
 
         try {
             WebElement searchUtil= driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/section/div/div/div[1]"));
-            new Actions(driver).moveToElement(searchUtil,60,1).click().build().perform();
+
         }catch (NoSuchElementException e){
             System.out.println("Recherche: Utilisateur non trouve");
         }
